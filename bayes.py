@@ -2,9 +2,13 @@ import numpy as np
 from sklearn.datasets import load_iris
 import matplotlib.pyplot as plt
 
+
 iris = load_iris()
 X = iris.data
 Y = iris.target
+arr = iris.items()
+
+print(type(arr))
 print(iris.feature_names)
 print(iris.target_names)
 # for i in range(len(X)):

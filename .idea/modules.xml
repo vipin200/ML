@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../graphics/.idea/graphics.iml" filepath="$PROJECT_DIR$/../graphics/.idea/graphics.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/ml.iml" filepath="$PROJECT_DIR$/.idea/ml.iml" />
       <module fileurl="file://$PROJECT_DIR$/../numpy/.idea/numpy.iml" filepath="$PROJECT_DIR$/../numpy/.idea/numpy.iml" />
     </modules>
