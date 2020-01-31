@@ -26,8 +26,6 @@ for i in range(no_class):
 xi = np.empty((no_class,no_attr) , dtype=np.ndarray)
 # print(X_train[ii[0]])
 
-print()
-print()
 # print(temp1)
 for i in range(no_class):
     for j in range(no_attr):
@@ -48,7 +46,7 @@ prob_class = count_class/sum(count_class)
 
 prob_yx = np.empty((len(X_test),no_class))
 
-def prob_xy(X , i, j):  # i : class  -------- j: attribute
+def prob_xy(X , i, j):  # (i : class)  -------- (j: attribute)
     temp = math.exp(-math.pow(X-mean_xi[i][j],2) / (2 * math.pow(std_xi[i][j],2)))
     temp1 = (1/math.sqrt(2 * math.pi * std_xi[i][j])) * temp
     return temp1
@@ -76,7 +74,7 @@ accuracy = (true_count/len(Y_test)) *100
 print("Accuracy calculated: ",accuracy)
 
 
-
+#--------------------------------------------------------------------------------------------
 
 
 from sklearn.naive_bayes import GaussianNB
