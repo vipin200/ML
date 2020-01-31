@@ -62,4 +62,30 @@ for i in range(len(X_test)):
 
 
 
-print(prob_yx)
+# print(prob_yx)
+max_prob = np.argmax(prob_yx , axis=1)
+# print(max_prob)
+# print(Y_test)
+check = max_prob == Y_test
+# print(check)
+
+true_count = np.count_nonzero(check)
+# print(true_count)
+
+accuracy = (true_count/len(Y_test)) *100
+print("Accuracy calculated: ",accuracy)
+
+
+
+
+
+from sklearn.naive_bayes import GaussianNB
+
+gnb = GaussianNB()
+gnb.fit(X_train, Y_train)
+
+Y_pred = gnb.predict(X_test)
+
+from sklearn import metrics
+
+print("Accuracy is: ", metrics.accuracy_score(Y_test , Y_pred) * 100)
