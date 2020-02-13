@@ -4,72 +4,35 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_breast_cancer
 
-def init():
-    dataset = load_breast_cancer()
-    X = dataset['Head Size(cm^3)'].values
-    Y = dataset['Brain Weight(grams)'].values
-
+def normalize(X):
     X = (X - np.min(X)) / (np.max(X) - np.min(X))
-    Y = (Y - np.min(Y)) / (np.max(Y) - np.min(Y))
+    return X
 
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.1, random_state=1)
+dataset = load_breast_cancer()
+X = dataset.data
+Y = dataset.target
 
-    return X, Y, X_train, X_test, Y_train, Y_test
+for i in range(X.shape[1]):
+    X[:,i] = normalize(X[:,i])
+X = np.concatenate((np.ones((len(X),1)),X),axis=1)
+from sklearn.model_selection import train_test_split
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=1)
+theta = np.zeros(X.shape[1])                           # theta ----> 1 x n
+J = np.empty(20000)
+m = len(X_train)
+alpha = 0.05
+for i  in range(20000):
+    z = X_train @ theta.T
+    y_pred = 1/(1+np.exp(-z))
+    J[i] = (-1/m) * ((Y_train.T @ np.log(y_pred)) + ((1-Y_train).T @ np.log(1-y_pred)))
+    theta = theta - (alpha/m) * (X_train.T @ (y_pred-Y_train))
 
-
-def calculateCost(theta, X_data, Y_data):
-    m = len(X_data)
-    prediction = X_data.dot(theta)
-    cost = (1 / m) * np.sum(np.square(prediction - Y_data))
-    return (cost ** (1 / 2))
-
-
-def gradientDescent(X_train, X_test, Y_train, Y_test, learningRate, iterations):
-    X_train = X_train.reshape(len(X_train), 1)
-    X_train = np.concatenate((np.ones((len(X_train), 1)), X_train), axis=1)
-
-    X_test = X_test.reshape(len(X_test), 1)
-    X_test = np.concatenate((np.ones((len(X_test), 1)), X_test), axis=1)
-
-    m = len(Y_train)
-    theta = np.zeros(X_train.shape[1]).T
-    print(theta)
-    RMSE_train = np.empty(iterations)
-    RMSE_test = np.empty(iterations)
-    it = np.arange(iterations)
-    for i in range(iterations):
-        z = X_train.dot(theta)
-        predictions = 1/(1+np.exp(-z))
-
-        # errors = predictions - Y_train
-        # theta = theta - (1 / m) * learningRate * (X_train.T.dot(errors))
-        # RMSE_train[i] = calculateCost(theta, X_train, Y_train)
-        # RMSE_test[i] = calculateCost(theta, X_test, Y_test)
-        # if i % 1000 == 0:
-        #     plt.plot(np.arange(i), RMSE_train[0:i], color='red')
-        #     plt.plot(np.arange(i), RMSE_test[0:i], color='blue')
-        #     plt.xlabel('iterations')
-        #     plt.ylabel('RMSE')
-        #     # plt.show()
-
-    # plt.plot(it, RMSE_train, color = 'red')
-    # plt.plot(it, RMSE_test, color = 'blue')
-    # plt.xlabel('iterations')
-    # plt.ylabel('RMSE')
-    # plt.show()
-    return theta, RMSE_train, RMSE_test
-
-
-def main():
-    X, Y, X_train, X_test, Y_train, Y_test = init()
-    theta, RMSE_train, RMSE_test = gradientDescent(X_train, X_test, Y_train, Y_test, learningRate=0.01, iterations=5000)
-
-    print(theta)
-    plt.scatter(X_train, Y_train)
-    predictions = theta[0] + theta[1] * X_train
-    plt.plot(X_train, predictions)
-    # plt.show()
-
-
-if __name__ == '__main__':
-    main()
+plt.plot(np.arange(20000),J)
+plt.show()
+y_pred_test = X_test @ theta.T
+y_pred_test[y_pred_test >= 0.5] = 1
+y_pred_test[y_pred_test < 0.5] = 0
+check = y_pred_test == Y_test
+true_count = np.count_nonzero(check)
+accuracy = true_count/len(Y_test) *100
+print(accuracy)

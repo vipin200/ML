@@ -32,6 +32,7 @@ def gradientDescent(X_train, X_test, Y_train, Y_test, learningRate, iterations):
     X_test = np.concatenate((np.ones((len(X_test), 1)), X_test), axis=1)
 
     m = len(Y_train)
+    print(X_train.shape)
     theta = np.zeros(X_train.shape[1]).T
     RMSE_train = np.empty(iterations)
     RMSE_test = np.empty(iterations)
